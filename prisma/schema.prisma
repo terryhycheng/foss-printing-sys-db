@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model printRecord {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  date        DateTime
+  eventName   String
+  userGroup   userGroup @relation(fields: [userGroupId], references: [id])
+  userGroupId String    @db.ObjectId
+  quantity    Int
+  size        String
+  requester   String
+  paperType   String
+}
+
+model contact {
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  type    String
+  title   String
+  content String
+  link    String?
+}
+
+model inventory {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  type     String
+  name     String
+  code     String
+  quantity Int
+}
+
+model userGroup {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  slug        String
+  FullName    String
+  PrintRecord printRecord[]
+}
+
+model printer {
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  type    String
+  title   String
+  content String
+  link    String?
+}
+
+model user {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model reset {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String
+  email  String
+}
